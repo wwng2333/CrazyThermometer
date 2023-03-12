@@ -4,5 +4,8 @@
 #include "intrins.h"
 
 void Delay500ms();
+void Delay70us();
+void Delay30us();
+void Delay500us();
 
 #endif

@@ -1,27 +1,9 @@
 #include "DS18B20.h"
-#include <intrins.h>
+#include "Delay.h"
 
 // 定义变量
 unsigned char flag_temper = 0;
 
-//****************************************************
-// DS18B20延时函数
-//****************************************************
-void DS18B20_Delay(unsigned int n)
-{
-    unsigned int i, j;
-    for (i = 0; i < n; i++)
-    {
-        _nop_();
-        _nop_();
-        j = 1;
-        while (--i)
-            ;
-    }
-}
-//****************************************************
-// DS18B20写1字节
-//****************************************************
 void DS18B20_Write_Byte(unsigned char dat)
 {
     unsigned char i;
@@ -34,7 +16,7 @@ void DS18B20_Write_Byte(unsigned char dat)
         DS18B20_DQ = dat & 0x01; // 先写低位
         dat >>= 1;
 
-        DS18B20_Delay(70); // 延时60~120us
+        Delay70us(); // 延时60~120us
 
         DS18B20_DQ = 1; // 释放总线
         _nop_();        // 延时>1us
@@ -42,9 +24,6 @@ void DS18B20_Write_Byte(unsigned char dat)
     }
 }
 
-//****************************************************
-// DS18B20读1字节
-//****************************************************
 unsigned char DS18B20_Read_Byte()
 {
     unsigned char dat, i;
@@ -68,14 +47,11 @@ unsigned char DS18B20_Read_Byte()
             dat &= 0x7f;
         }
 
-        DS18B20_Delay(70); // 延时60~120us
+        Delay70us(); // 延时60~120us
     }
     return dat;
 }
 
-//****************************************************
-// DS18B20初始化
-//****************************************************
 bit DS18B20_Init()
 {
     bit Flag_exist = 1;
@@ -84,13 +60,13 @@ bit DS18B20_Init()
     _nop_();
 
     DS18B20_DQ = 0;
-    DS18B20_Delay(500); // 延时480~960us
+    Delay500us(); // 延时480~960us
 
     DS18B20_DQ = 1;    // 释放总线
-    DS18B20_Delay(30); // 延时15~60us
+    Delay30us(); // 延时15~60us
 
     Flag_exist = DS18B20_DQ;
-    DS18B20_Delay(70); // 延时60~240us
+    Delay70us(); // 延时60~240us
 
     DS18B20_DQ = 1; // 释放总线
     return Flag_exist;

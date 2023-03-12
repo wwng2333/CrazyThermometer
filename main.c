@@ -29,7 +29,7 @@ int main(void)
             UartSend(Temp_Buffer % 100 / 10 + '0');   // 显示温度个位值
             UartSend('.');                            // 显示小数点
             UartSend(Temp_Buffer % 10 + '0');         // 显示温度十分位
-            UartSendStr("C\r\n");
+            //UartSendStr("C\r\n");
             Delay500ms();
         }
     }
