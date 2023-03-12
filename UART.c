@@ -32,6 +32,8 @@ void UartInit()
     wptr = 0x00;
     rptr = 0x00;
     busy = 0;
+    ES = 1;
+    EA = 1;
 }
 
 void UartSend(char dat)
