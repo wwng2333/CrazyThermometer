@@ -23,17 +23,9 @@ void DigitLED_Init(void)
     LEDCTRL = 0x80;
 }
 
-void DigitLED_COM0_Write(int dat)
+void DigitLED_Write(int dat)
 {
-    COM0_DC_H = digit[dat];
-}
-
-void DigitLED_COM1_Write(int dat)
-{
-    COM1_DC_H = digit[dat];
-}
-
-void DigitLED_COM7_Write(int dat)
-{
-    COM7_DC_H = digit[dat];
+    COM7_DC_H = digit[dat / 100];
+    COM0_DC_H = digit[dat / 10 % 10];
+    COM1_DC_H = digit[dat % 10];
 }

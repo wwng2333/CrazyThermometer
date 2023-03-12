@@ -28,11 +28,9 @@ int main(void)
     UartSendStr("Uart Test !\r\n");
     while (1)
     {
-        for (i = 0; i < 10; i++)
+        for (i = 0; i < 999; i++)
         {
-            DigitLED_COM7_Write(i);
-            DigitLED_COM0_Write(i);
-            DigitLED_COM1_Write(i);
+            DigitLED_Write(i);
             Delay500ms();
         }
     }
