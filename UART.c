@@ -36,6 +36,7 @@ void UartInit()
     EA = 1;
 }
 
+
 void UartSend(char dat)
 {
     while (busy)
