@@ -15,7 +15,7 @@ void DS18B20_Reset();
 extern void DS18B20_Delay(unsigned int n);
 extern void DS18B20_Write_Byte(unsigned char dat);
 extern unsigned char DS18B20_Read_Byte();
-extern unsigned int Get_temp(void);
+extern unsigned int DS18B20_GetTemp(void);
 bit DS18B20_Read_Bit();
 void DS18B20_Write_Bit(bit dat);
 extern unsigned char flag_temper;

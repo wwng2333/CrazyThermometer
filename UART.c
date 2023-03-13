@@ -34,6 +34,7 @@ void UartInit()
     busy = 0;
     ES = 1;
     EA = 1;
+    UartSendStr("UART0: init ok!\r\n");
 }
 
 void UartSend(char dat)

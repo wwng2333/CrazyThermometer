@@ -23,7 +23,7 @@ void DS18B20_UART_InitReport()
 void DS18B20_UART0_Debug()
 {
     unsigned int Temp_Buffer = 0;
-    Temp_Buffer = Get_temp();
+    Temp_Buffer = DS18B20_GetTemp();
     UartSendStr("18B20: ");
     if (flag_temper == 1)
         UartSend('-');
@@ -128,7 +128,7 @@ unsigned int DS18B20_WaitReady(void)
 //**********************************************************
 // 读取温度函数，返回温度的绝对值，并标注flag_temper，flag_temper=1表示负，flag_temper=0表示正
 //**********************************************************
-unsigned int Get_temp(void) // 读取温度值
+unsigned int DS18B20_GetTemp(void) // 读取温度值
 {
     float tt;
     unsigned char a, b;

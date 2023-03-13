@@ -22,10 +22,12 @@ void DigitLED_Init(void)
     LEDCKS = 0x1E;
     LEDCTRL = 0x80;
     LEDCTRL |= 0x07; //12.5%
+    P_SW2 &= ~0x80; 
 }
 
 void DigitLED_EnableDP(int dat)
 {
+    P_SW2 |= 0x80;
     switch(dat)
     {
         case 0: 
@@ -38,11 +40,15 @@ void DigitLED_EnableDP(int dat)
             COM1_DC_H |= 0x40; 
             break;
     }
+    P_SW2 &= ~0x80;
 }
 
-void DigitLED_Write(int dat)
+void DigitLED_Write(unsigned int dat)
 {
+    P_SW2 |= 0x80;
     if(dat >= 100) COM7_DC_H = digit[dat / 100];
     if(dat >= 10) COM0_DC_H = digit[dat / 10 % 10];
     COM1_DC_H = digit[dat % 10];
+    DigitLED_EnableDP(1);
+    P_SW2 &= ~0x80; 
 }
