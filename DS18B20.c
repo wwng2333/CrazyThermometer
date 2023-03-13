@@ -90,8 +90,10 @@ unsigned char DS18B20_Read_Byte()
 
 void DS18B20_Init()
 {
+    P_SW2 |= 0x80;
     P2M0 |= 0x08;
     P2M1 |= 0x08;
+    P_SW2 &= ~0x80;
 }
 
 void DS18B20_Reset()
@@ -116,7 +118,7 @@ unsigned int DS18B20_WaitReady(void)
         count++;
     }
     if(count > 240) return 1;
-    count = 0;
+    else count = 0;
     while((DS18B20_DQ == 0) && (count < 240))
     {
         Delay2us();

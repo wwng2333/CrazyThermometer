@@ -35,6 +35,6 @@ int main(void)
         UartSend(TK2_Read());
         //DS18B20_UART0_Debug();
         DigitLED_Write(DS18B20_GetTemp());
-        Delay500ms();
+        Delay50ms();
     }
 }

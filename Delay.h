@@ -2,7 +2,7 @@
 #define _delay_H_
 #include "intrins.h"
 
-void Delay500ms();
+void Delay50ms();
 void Delay70us();
 void Delay30us();
 void Delay2us();

@@ -18,7 +18,8 @@ void TK_Init()
 bit TK2_Read(void)
 {
     unsigned char j;
-    unsigned int i,ret;
+    unsigned int i;
+    bit ret;
     P_SW2 |= 0x80;
     for(i=0;i<100;i++)
     {

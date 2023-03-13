@@ -23,6 +23,7 @@ void UartIsr() interrupt 4
 
 void UartInit()
 {
+    P_SW2 |= 0x80;
     SCON = 0x50;
     TMOD = 0x00;
     TL1 = BRT;
@@ -35,6 +36,7 @@ void UartInit()
     ES = 1;
     EA = 1;
     UartSendStr("UART0: init ok!\r\n");
+    P_SW2 &= ~0x80;
 }
 
 void UartSend(char dat)

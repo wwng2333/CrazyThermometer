@@ -1,21 +1,21 @@
 #include "Delay.h"
 
-void Delay500ms() //@11.0592MHz
+void Delay50ms()		//@11.0592MHz
 {
-    unsigned char i, j, k;
+	unsigned char i, j, k;
 
-    i = 29;
-    j = 14;
-    k = 54;
-    do
-    {
-        do
-        {
-            while (--k)
-                ;
-        } while (--j);
-    } while (--i);
+	i = 3;
+	j = 207;
+	k = 28;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
 }
+
 
 void Delay70us()		//@11.0592MHz
 {
