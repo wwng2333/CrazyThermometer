@@ -1,8 +1,40 @@
 #include "DS18B20.h"
 #include "Delay.h"
+#include "UART.h"
 
-// 定义变量
 unsigned char flag_temper = 0;
+
+void DS18B20_UART_InitReport()
+{
+    switch(DS18B20_CheckDevice())
+    {
+        case 0: 
+            UartSendStr("18B20: Init OK!\r\n");
+            break;
+        case 1: 
+            UartSendStr("18B20: NO ACK!\r\n");
+            break;
+        case 2: 
+            UartSendStr("18B20: release failed!\r\n");
+            break;
+    }
+}
+
+void DS18B20_UART0_Debug()
+{
+    unsigned int Temp_Buffer = 0;
+    Temp_Buffer = Get_temp();
+    UartSendStr("18B20: ");
+    if (flag_temper == 1)
+        UartSend('-');
+    if (Temp_Buffer / 1000 != 0)
+        UartSend(Temp_Buffer / 1000 + '0');
+    UartSend(Temp_Buffer % 1000 / 100 + '0');
+    UartSend(Temp_Buffer % 100 / 10 + '0');
+    UartSend('.');
+    UartSend(Temp_Buffer % 10 + '0');
+    UartSendStr("C\r\n");
+}
 
 unsigned int DS18B20_CheckDevice(void)
 {
@@ -101,13 +133,13 @@ unsigned int Get_temp(void) // 读取温度值
     float tt;
     unsigned char a, b;
     unsigned int temp;
-    while(!DS18B20_DQ); //wait 18b20 ready
+    //while(!DS18B20_DQ); //wait 18b20 ready
     if (DS18B20_CheckDevice() == 0) // 初始化
     {
         DS18B20_Write_Byte(0xcc); // 忽略ROM指令
         DS18B20_Write_Byte(0x44); // 温度转换指令
 
-        Delay500ms();				//PROTEUS仿真需要加
+        //Delay500ms();				//PROTEUS仿真需要加
 
         if (DS18B20_CheckDevice() == 0) // 初始化
         {

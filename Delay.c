@@ -1,5 +1,4 @@
 #include "Delay.h"
-#include <intrins.h>
 
 void Delay500ms() //@11.0592MHz
 {

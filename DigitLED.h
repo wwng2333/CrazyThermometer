@@ -3,4 +3,5 @@
 
 void DigitLED_Init(void);
 void DigitLED_Write(int dat);
+void DigitLED_EnableDP(int dat);
 #endif
