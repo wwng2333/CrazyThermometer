@@ -20,10 +20,14 @@ void Delay500ms() //@11.0592MHz
 
 void Delay70us()		//@11.0592MHz
 {
-	unsigned char i;
+	unsigned char i, j;
 
-	i = 0;
-	while (--i);
+	i = 2;
+	j = 2;
+	do
+	{
+		while (--j);
+	} while (--i);
 }
 
 void Delay500us()		//@11.0592MHz
@@ -47,5 +51,14 @@ void Delay30us()		//@11.0592MHz
 	_nop_();
 	_nop_();
 	i = 108;
+	while (--i);
+}
+
+void Delay2us()		//@11.0592MHz
+{
+	unsigned char i;
+
+	_nop_();
+	i = 5;
 	while (--i);
 }

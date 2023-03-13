@@ -10,8 +10,7 @@ void DS18B20_Write_Byte(unsigned char dat)
     for (i = 0; i < 8; i++)
     {
         DS18B20_DQ = 0;
-        _nop_(); // 延时>1us
-        _nop_();
+        Delay2us();
 
         DS18B20_DQ = dat & 0x01; // 先写低位
         dat >>= 1;
@@ -19,8 +18,7 @@ void DS18B20_Write_Byte(unsigned char dat)
         Delay70us(); // 延时60~120us
 
         DS18B20_DQ = 1; // 释放总线
-        _nop_();        // 延时>1us
-        _nop_();
+        Delay2us();
     }
 }
 
@@ -30,12 +28,10 @@ unsigned char DS18B20_Read_Byte()
     for (i = 0; i < 8; i++)
     {
         DS18B20_DQ = 0;
-        _nop_(); // 延时>1us
-        _nop_();
+        Delay2us();
 
         DS18B20_DQ = 1; // 释放总线
-        _nop_();        // 延时>1us
-        _nop_();
+        Delay2us();
 
         dat >>= 1;
         if (DS18B20_DQ == 1)
@@ -55,9 +51,9 @@ unsigned char DS18B20_Read_Byte()
 bit DS18B20_Init()
 {
     bit Flag_exist = 1;
+    
     DS18B20_DQ = 1; // 释放总线
-    _nop_();        // 延时>1us
-    _nop_();
+    Delay2us();
 
     DS18B20_DQ = 0;
     Delay500us(); // 延时480~960us
