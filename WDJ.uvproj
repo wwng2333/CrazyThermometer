@@ -431,6 +431,16 @@
               <FileType>5</FileType>
               <FilePath>.\DS18B20.h</FilePath>
             </File>
+            <File>
+              <FileName>TouchKey.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\TouchKey.c</FilePath>
+            </File>
+            <File>
+              <FileName>TouchKey.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\TouchKey.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
