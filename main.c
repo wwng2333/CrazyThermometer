@@ -18,7 +18,7 @@ int main(void)
     TSCHEN2 = 0x00;
     TSRT = 0x01;
     TSCFG1 = 0x70;
-    TSCFG2 = 0x02;
+    TSCFG2 = 0x00;
     TSCTRL = 0x80;
     P_SW2 &= ~0x80;
 
