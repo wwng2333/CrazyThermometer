@@ -8,13 +8,26 @@ int main(void)
 {
     unsigned int Temp_Buffer = 0;
     int i;
+    DS18B20_Init();
     DigitLED_Init();
     UartInit();
-
-    P2M0 |= 0x08;
-    P2M1 |= 0x08;
+    //P_SW2 |= 0x80;
+    //P2PU |= 0x08;
 
     UartSendStr("Uart Test !\r\n");
+
+    switch(DS18B20_CheckDevice())
+    {
+        case 0: 
+            UartSendStr("18B20: Init OK!\r\n");
+            break;
+        case 1: 
+            UartSendStr("18B20: NO ACK!\r\n");
+            break;
+        case 2: 
+            UartSendStr("18B20: release failed!\r\n");
+            break;
+    }
     while (1)
     {
         for (i = 0; i < 999; i++)

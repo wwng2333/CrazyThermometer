@@ -62,3 +62,12 @@ void Delay2us()		//@11.0592MHz
 	i = 5;
 	while (--i);
 }
+
+void Delay12us()		//@11.0592MHz
+{
+	unsigned char i;
+
+	_nop_();
+	i = 42;
+	while (--i);
+}

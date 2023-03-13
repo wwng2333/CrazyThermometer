@@ -4,54 +4,66 @@
 // 定义变量
 unsigned char flag_temper = 0;
 
+unsigned int DS18B20_CheckDevice(void)
+{
+    DS18B20_Reset();
+    return DS18B20_WaitReady();
+}
+
 void DS18B20_Write_Byte(unsigned char dat)
 {
     unsigned char i;
     for (i = 0; i < 8; i++)
     {
-        DS18B20_DQ = 0;
-        Delay2us();
-
-        DS18B20_DQ = dat & 0x01; // 先写低位
+        DS18B20_Write_Bit(dat & 0x01);
         dat >>= 1;
-
-        Delay70us(); // 延时60~120us
-
-        DS18B20_DQ = 1; // 释放总线
-        Delay2us();
     }
+}
+
+void DS18B20_Write_Bit(bit dat)
+{
+    DS18B20_DQ = 0;
+    Delay2us();
+    DS18B20_DQ = dat;
+    Delay70us();
+    DS18B20_DQ = 1;
+    Delay2us();
+}
+
+bit DS18B20_Read_Bit()
+{
+    bit dat;
+    DS18B20_DQ = 0;
+    Delay2us();
+    DS18B20_DQ = 1;
+    Delay12us();
+    if(DS18B20_DQ) dat = 1;
+    else dat = 0;
+    Delay70us();
+    return dat;
 }
 
 unsigned char DS18B20_Read_Byte()
 {
-    unsigned char dat, i;
+    unsigned char i, dat;
+    bit j;
     for (i = 0; i < 8; i++)
     {
-        DS18B20_DQ = 0;
-        Delay2us();
-
-        DS18B20_DQ = 1; // 释放总线
-        Delay2us();
-
         dat >>= 1;
-        if (DS18B20_DQ == 1)
-        {
-            dat |= 0X80;
-        }
-        else
-        {
-            dat &= 0x7f;
-        }
-
-        Delay70us(); // 延时60~120us
+        j = DS18B20_Read_Bit();
+        if(j) dat |= 0x80;
     }
     return dat;
 }
 
-bit DS18B20_Init()
+void DS18B20_Init()
 {
-    bit Flag_exist = 1;
-    
+    P2M0 |= 0x08;
+    P2M1 |= 0x08;
+}
+
+void DS18B20_Reset()
+{    
     DS18B20_DQ = 1; // 释放总线
     Delay2us();
 
@@ -60,12 +72,25 @@ bit DS18B20_Init()
 
     DS18B20_DQ = 1;    // 释放总线
     Delay30us(); // 延时15~60us
+}
 
-    Flag_exist = DS18B20_DQ;
-    Delay70us(); // 延时60~240us
-
-    DS18B20_DQ = 1; // 释放总线
-    return Flag_exist;
+unsigned int DS18B20_WaitReady(void)
+{
+    unsigned int count = 0;
+    DS18B20_Init();
+    while((DS18B20_DQ == 1) && (count < 240))
+    {
+        Delay2us();
+        count++;
+    }
+    if(count > 240) return 1;
+    count = 0;
+    while((DS18B20_DQ == 0) && (count < 240))
+    {
+        Delay2us();
+        count++;
+    }
+    return (count > 240) ? 2 : 0;
 }
 
 //**********************************************************
@@ -76,14 +101,15 @@ unsigned int Get_temp(void) // 读取温度值
     float tt;
     unsigned char a, b;
     unsigned int temp;
-    if (DS18B20_Init() == 0) // 初始化
+    while(!DS18B20_DQ); //wait 18b20 ready
+    if (DS18B20_CheckDevice() == 0) // 初始化
     {
         DS18B20_Write_Byte(0xcc); // 忽略ROM指令
         DS18B20_Write_Byte(0x44); // 温度转换指令
 
-        //	_delay_ms(750);				//PROTEUS仿真需要加
+        Delay500ms();				//PROTEUS仿真需要加
 
-        if (DS18B20_Init() == 0) // 初始化
+        if (DS18B20_CheckDevice() == 0) // 初始化
         {
             DS18B20_Write_Byte(0xcc); // 忽略ROM指令
             DS18B20_Write_Byte(0xbe); // 读暂存器指令
