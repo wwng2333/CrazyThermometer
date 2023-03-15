@@ -1,9 +1,10 @@
 #include "STC8H.h"
 #include "TouchKey.h"
 #include "UART.h"
+#include "DigitLED.h"
 
 bit TK2_Old = 0;
-
+int led_duty = 0x00;
 void TK_Init()
 {
     P_SW2 |= 0x80;
@@ -45,11 +46,17 @@ bit TK2_Read(void)
 
 void TK2_Update(void)
 {
+    extern int led_duty;
     extern bit TK2_Old;
     if(TK2_Read() != TK2_Old)
     {
         TK2_Old = ~TK2_Old;
         if(TK2_Old == 1) 
-        UartSendStr("TK2 toggled.\r\n");
+        {
+            UartSendStr("TK2 toggled.\r\n");
+            if(led_duty < 0x07) led_duty += 0x01;
+            else led_duty = 0;
+            DigitLED_Duty(led_duty);
+        }
     }
 }

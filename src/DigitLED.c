@@ -1,6 +1,7 @@
 #include "STC8H.h"
 #include "DigitLED.h"
 #include "UART.h"
+#include "stdio.h"
 
 char code digit[10] = {
     0xAF,
@@ -53,4 +54,13 @@ void DigitLED_Write(unsigned int dat)
     COM1_DC_H = digit[dat % 10];
     DigitLED_EnableDP(1);
     P_SW2 &= ~0x80; 
+}
+
+void DigitLED_Duty(unsigned int dat)
+{
+    P_SW2 |= 0x80;
+    LEDCTRL = 0x80 | dat;
+    P_SW2 &= ~0x80; 
+    UartSend(dat);
+    //printf("LED duty %d\n", dat);
 }

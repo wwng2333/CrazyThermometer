@@ -45,6 +45,14 @@ void UartSend(char dat)
     SBUF = dat;
 }
 
+char putchar(char ch)
+{
+    SBUF = ch;
+    while(TI == 0);
+    TI = 0;
+    return ch;
+}
+
 void UartSendStr(char *p)
 {
     while (*p)

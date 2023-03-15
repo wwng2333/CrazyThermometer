@@ -1,19 +1,25 @@
 #include "ADC.h"
 #include "UART.h"
 #include "Delay.h"
+#include "DigitLED.h"
 #include <stdio.h>
 
 #define CPUIDBASE 0xfde0
 #define VREF_ADDR (*(unsigned int volatile xdata *)(CPUIDBASE + 0x07))
 
+bit adcold = 0;
+
 void ADC_Init()
 {
     P_SW2 |= 0x80;
+    P1M0 = 0x00;        //P1.6 高阻输入
+    P1M1 = 0x40;
     ADCTIM = 0x3f;           //设置ADC内部时序
     P_SW2 &= 0x7f;
 
     ADCCFG = 0x2f;           //设置ADC时钟为系统时钟/2/16
-    ADC_CONTR = 0x8f;       //使能ADC模块,并选择第15通道
+    //ADC_CONTR = 0x8f;       //使能ADC模块,并选择第15通道
+    ADC_CONTR = 0x86;       //使能ADC模块,并选择第6通道
 }
 
 int ADC_Read()
@@ -32,18 +38,18 @@ int ADC_Read()
 
 void ADC_Update(void)
 {
-    //int *BGV;
-    //extern bit ADC_Finished;
-    int vcc;
-    //P_SW2 |= 0x80;
-    //ADC_CONTR |= 0x40;      //继续AD转换
-    //P_SW2 &= ~0x80;
-    vcc = (int)(1024L * VREF_ADDR / ADC_Read());
-    //UartSend(VREF_ADDR >> 8);
-    //UartSend(VREF_ADDR);
-    UartSend(vcc >> 8);
-    UartSend(vcc);
-    //ADC_Finished = 0;
+    extern bit adcold;
+    bit adcnew;
+    int vcc,i;
+    for(i=0;i<8;i++) vcc += ADC_Read();
+    vcc >>= 3;
+    vcc = (int)(1024L*VREF_ADDR / vcc);
+    adcnew = (vcc > 0) ? 0 : 1; //12.5%
+    if(adcnew != adcold) {
+        adcold = adcnew;
+        //if(vcc > 0) DigitLED_Duty(0x07);
+        //else DigitLED_Duty(0x04); //100%
+    }
 }
 /*
 int ADC_Read(void)

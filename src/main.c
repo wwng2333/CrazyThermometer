@@ -21,10 +21,7 @@ void main(void)
     {
         if (Timer2_Act)
         {
-            //if (ADC_Finished)
-            //{
-                ADC_Update();
-            //}
+            ADC_Update();
             TK2_Update();
             DS18B20_Update();
             Timer2_Act = ~Timer2_Act;
