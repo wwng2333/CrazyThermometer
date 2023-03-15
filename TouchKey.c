@@ -1,5 +1,6 @@
 #include "STC8H.h"
 #include "TouchKey.h"
+#include "UART.h"
 
 void TK_Init()
 {
@@ -13,6 +14,7 @@ void TK_Init()
     TSCFG2 = 0x00;
     TSCTRL = 0x80;
     P_SW2 &= ~0x80;
+    UartInitReport("TK");
 }
 
 bit TK2_Read(void)

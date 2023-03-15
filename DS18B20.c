@@ -9,13 +9,15 @@ void DS18B20_UART_InitReport()
     switch(DS18B20_CheckDevice())
     {
         case 0: 
-            UartSendStr("18B20: Init OK!\r\n");
+            UartInitReport("18B20");
             break;
         case 1: 
-            UartSendStr("18B20: NO ACK!\r\n");
+            UartInitReport("18B20^1");
+            //UartSendStr("18B20: NO ACK!\r\n");
             break;
         case 2: 
-            UartSendStr("18B20: release failed!\r\n");
+            UartInitReport("18B20^2");
+            //UartSendStr("18B20: release failed!\r\n");
             break;
     }
 }
@@ -78,12 +80,10 @@ bit DS18B20_Read_Bit()
 unsigned char DS18B20_Read_Byte()
 {
     unsigned char i, dat;
-    bit j;
     for (i = 0; i < 8; i++)
     {
         dat >>= 1;
-        j = DS18B20_Read_Bit();
-        if(j) dat |= 0x80;
+        if(DS18B20_Read_Bit()) dat |= 0x80;
     }
     return dat;
 }

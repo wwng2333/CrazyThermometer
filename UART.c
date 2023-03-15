@@ -1,4 +1,3 @@
-#include "STC8H.h"
 #include "UART.h"
 
 bit busy;
@@ -35,7 +34,7 @@ void UartInit()
     busy = 0;
     ES = 1;
     EA = 1;
-    UartSendStr("UART0: init ok!\r\n");
+    UartInitReport("UART0");
     P_SW2 &= ~0x80;
 }
 
@@ -53,4 +52,13 @@ void UartSendStr(char *p)
     {
         UartSend(*p++);
     }
+}
+
+void UartInitReport(char *p)
+{
+    while (*p)
+    {
+        UartSend(*p++);
+    }
+    UartSendStr(":inited.\r\n");
 }

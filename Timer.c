@@ -1,8 +1,7 @@
-#include "STC8H.h"
 #include "Timer.h"
 #include "UART.h"
-#include "DigitLED.h"
-#include "DS18B20.h"
+
+extern bit Timer2_Act;
 
 void Timer2_Init(void)
 {
@@ -14,9 +13,10 @@ void Timer2_Init(void)
 	IE2 |= 0x04;			//使能定时器2中断
     EA = 1;
     P_SW2 &= ~0x80;
+    UartInitReport("Timer2");
 }
 
 void Timer2_Isr(void) interrupt 12
 {
-    DigitLED_Write(DS18B20_GetTemp());
+    Timer2_Act = 1;
 }

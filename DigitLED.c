@@ -1,5 +1,6 @@
 #include "STC8H.h"
 #include "DigitLED.h"
+#include "UART.h"
 
 char code digit[10] = {
     0xAF,
@@ -23,6 +24,7 @@ void DigitLED_Init(void)
     LEDCTRL = 0x80;
     LEDCTRL |= 0x07; //12.5%
     P_SW2 &= ~0x80; 
+    UartInitReport("Digit");
 }
 
 void DigitLED_EnableDP(int dat)
