@@ -4,12 +4,14 @@
 #include "DS18B20.h"
 #include "TouchKey.h"
 #include "Timer.h"
+#include "ADC.h"
 
 bit Timer2_Act = 0;
 
-int main(void)
+void main(void)
 {
     UartInit();
+    ADC_Init();
     DigitLED_Init();
     TK_Init();
     DS18B20_UART_InitReport();

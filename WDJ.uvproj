@@ -377,79 +377,94 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
-              <FileName>STARTUP.A51</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\STARTUP.A51</FilePath>
-            </File>
-            <File>
-              <FileName>main.c</FileName>
+              <FileName>ADC.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
+              <FilePath>.\src\ADC.c</FilePath>
             </File>
             <File>
-              <FileName>STC8H.h</FileName>
+              <FileName>ADC.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\STC8H.h</FilePath>
-            </File>
-            <File>
-              <FileName>UART.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\UART.c</FilePath>
-            </File>
-            <File>
-              <FileName>UART.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\UART.h</FilePath>
-            </File>
-            <File>
-              <FileName>DigitLED.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\DigitLED.c</FilePath>
-            </File>
-            <File>
-              <FileName>DigitLED.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\DigitLED.h</FilePath>
+              <FilePath>.\src\ADC.h</FilePath>
             </File>
             <File>
               <FileName>Delay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Delay.c</FilePath>
+              <FilePath>.\src\Delay.c</FilePath>
             </File>
             <File>
               <FileName>Delay.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\Delay.h</FilePath>
+              <FilePath>.\src\Delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>DigitLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\DigitLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>DigitLED.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\DigitLED.h</FilePath>
             </File>
             <File>
               <FileName>DS18B20.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\DS18B20.c</FilePath>
+              <FilePath>.\src\DS18B20.c</FilePath>
             </File>
             <File>
               <FileName>DS18B20.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\DS18B20.h</FilePath>
+              <FilePath>.\src\DS18B20.h</FilePath>
             </File>
             <File>
-              <FileName>TouchKey.c</FileName>
+              <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\TouchKey.c</FilePath>
+              <FilePath>.\src\main.c</FilePath>
             </File>
             <File>
-              <FileName>TouchKey.h</FileName>
+              <FileName>PWM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\PWM.c</FilePath>
+            </File>
+            <File>
+              <FileName>STARTUP.A51</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\src\STARTUP.A51</FilePath>
+            </File>
+            <File>
+              <FileName>STC8H.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\TouchKey.h</FilePath>
+              <FilePath>.\src\STC8H.h</FilePath>
             </File>
             <File>
               <FileName>Timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Timer.c</FilePath>
+              <FilePath>.\src\Timer.c</FilePath>
             </File>
             <File>
               <FileName>Timer.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\Timer.h</FilePath>
+              <FilePath>.\src\Timer.h</FilePath>
+            </File>
+            <File>
+              <FileName>TouchKey.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\TouchKey.c</FilePath>
+            </File>
+            <File>
+              <FileName>TouchKey.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\TouchKey.h</FilePath>
+            </File>
+            <File>
+              <FileName>UART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\UART.c</FilePath>
+            </File>
+            <File>
+              <FileName>UART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\UART.h</FilePath>
             </File>
           </Files>
         </Group>
