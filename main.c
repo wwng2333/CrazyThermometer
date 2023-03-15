@@ -18,8 +18,7 @@ int main(void)
     {
         if (Timer2_Act)
         {
-            DS18B20_UART0_Debug();
-            DigitLED_Write(DS18B20_GetTemp());
+            DS18B20_Update();
             Timer2_Act = 0;
         }
     }

@@ -1,8 +1,10 @@
 #include "DS18B20.h"
+#include "DigitLED.h"
 #include "Delay.h"
 #include "UART.h"
 
 unsigned char flag_temper = 0;
+unsigned int old = 0;
 
 void DS18B20_UART_InitReport()
 {
@@ -22,20 +24,26 @@ void DS18B20_UART_InitReport()
     }
 }
 
-void DS18B20_UART0_Debug()
+void DS18B20_Update()
 {
-    unsigned int Temp_Buffer = 0;
-    Temp_Buffer = DS18B20_GetTemp();
-    UartSendStr("18B20: ");
-    if (flag_temper == 1)
-        UartSend('-');
-    if (Temp_Buffer / 1000 != 0)
-        UartSend(Temp_Buffer / 1000 + '0');
-    UartSend(Temp_Buffer % 1000 / 100 + '0');
-    UartSend(Temp_Buffer % 100 / 10 + '0');
-    UartSend('.');
-    UartSend(Temp_Buffer % 10 + '0');
-    UartSendStr("C\r\n");
+    extern unsigned int old;
+    unsigned int now;
+    now = DS18B20_GetTemp();
+    if(now != old)
+    {
+        old = now;
+        UartSendStr("18B20: ");
+        if (flag_temper == 1)
+            UartSend('-');
+        if (old / 1000 != 0)
+            UartSend(old / 1000 + '0');
+        UartSend(old % 1000 / 100 + '0');
+        UartSend(old % 100 / 10 + '0');
+        UartSend('.');
+        UartSend(old % 10 + '0');
+        UartSendStr("C\r\n");
+        DigitLED_Write(old);
+    }
 }
 
 unsigned int DS18B20_CheckDevice(void)
