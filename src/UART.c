@@ -40,8 +40,7 @@ void UartInit()
 
 void UartSend(char dat)
 {
-    while (busy)
-        ;
+    while (busy);
     busy = 1;
     SBUF = dat;
 }

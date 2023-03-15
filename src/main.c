@@ -7,6 +7,7 @@
 #include "ADC.h"
 
 bit Timer2_Act = 0;
+bit ADC_Finished = 0;
 
 void main(void)
 {
@@ -20,6 +21,10 @@ void main(void)
     {
         if (Timer2_Act)
         {
+            //if (ADC_Finished)
+            //{
+                ADC_Update();
+            //}
             TK2_Update();
             DS18B20_Update();
             Timer2_Act = ~Timer2_Act;
