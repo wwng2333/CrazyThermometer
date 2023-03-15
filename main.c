@@ -18,8 +18,9 @@ int main(void)
     {
         if (Timer2_Act)
         {
+            TK2_Update();
             DS18B20_Update();
-            Timer2_Act = 0;
+            Timer2_Act = ~Timer2_Act;
         }
     }
 }

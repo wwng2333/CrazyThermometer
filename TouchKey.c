@@ -2,6 +2,8 @@
 #include "TouchKey.h"
 #include "UART.h"
 
+bit TK2_Old = 0;
+
 void TK_Init()
 {
     P_SW2 |= 0x80;
@@ -39,4 +41,15 @@ bit TK2_Read(void)
     }
     P_SW2 &= ~0x80;
     return ret;
+}
+
+void TK2_Update(void)
+{
+    extern bit TK2_Old;
+    if(TK2_Read() != TK2_Old)
+    {
+        TK2_Old = ~TK2_Old;
+        if(TK2_Old == 1) 
+        UartSendStr("TK2 toggled.\r\n");
+    }
 }

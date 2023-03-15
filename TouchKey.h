@@ -3,5 +3,6 @@
 
 void TK_Init();
 bit TK2_Read(void);
+void TK2_Update(void);
 
 #endif
