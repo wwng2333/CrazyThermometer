@@ -23,6 +23,7 @@ void main(void)
     {
         if (Timer2_Act)
         {
+            LM75_Update();
             //ADC_Update();
             TK2_Update();
             DS18B20_Update();

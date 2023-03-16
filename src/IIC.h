@@ -3,7 +3,9 @@
 
 #include "STC8H.h"
 
-unsigned int LM75_Update(void);
+void I2C_Isr();
+void LM75_Update();
+unsigned int LM75_GetTemp(void);
 void IIC_Init();
 void IIC_Wait();
 void IIC_Start();
