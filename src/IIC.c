@@ -1,5 +1,6 @@
 #include "IIC.h"
 #include "UART.h"
+#include "Delay.h"
 #include "stdio.h"
 
 //sbit SDA = P2^4;
@@ -44,7 +45,7 @@ unsigned int LM75_GetTemp(void)
     IIC_RecvACK();
     IIC_SendData(0x00); //temperature
     IIC_RecvACK();
-
+    Delay500us();
     IIC_Start();
     IIC_SendData(0x9F); //device addr+read, 1001 1111B
     IIC_RecvACK();
