@@ -39,6 +39,7 @@ void LM75_Update()
 
 unsigned int LM75_GetTemp(void)
 {
+    unsigned char hb,lb;
     unsigned int t = 0;
     IIC_Start();
     IIC_SendData(0x9E); //device addr+write, 1001 1110B
@@ -49,13 +50,15 @@ unsigned int LM75_GetTemp(void)
     IIC_Start();
     IIC_SendData(0x9F); //device addr+read, 1001 1111B
     IIC_RecvACK();
-    t = IIC_RecvData();
+    hb = IIC_RecvData();
     IIC_SendACK();
-    t <<= 8;
-    t |= IIC_RecvData();
-    t >>= 5;
+    lb = IIC_RecvData();
     IIC_SendNAK();
     IIC_Stop();
+    t |= hb; 
+    t <<= 8;
+    t |= lb;
+    t >>= 5;
     //printf("LM75:%7.3f\r\n", (float)t*0.125);
     return t;
 }
@@ -80,6 +83,7 @@ void IIC_Wait()
 
 void IIC_Start()
 {
+    while (LM75_Busy);
     LM75_Busy = 1;
     P_SW2 |= 0x80;
     I2CMSCR = 0x81;     //发送START命令
@@ -88,6 +92,7 @@ void IIC_Start()
 
 void IIC_SendData(char dat)
 {
+    while (LM75_Busy);
     LM75_Busy = 1;
     I2CTXD = dat;       //写数据到数据缓冲区
     I2CMSCR = 0x82;     //发送SEND命令
