@@ -1,6 +1,7 @@
 #include "IIC.h"
 #include "UART.h"
 #include "Delay.h"
+#include "DigitLED.h"
 #include "stdio.h"
 
 //sbit SDA = P2^4;
@@ -33,13 +34,12 @@ void LM75_Update()
         UartSend('.');
         UartSend(LM75_old % 10 + '0');
         UartSendStr("C\r\n");
-        //DigitLED_Write(LM75_old);
+        DigitLED_Write(LM75_old);
     }
 }
 
 unsigned int LM75_GetTemp(void)
 {
-    unsigned char hb,lb;
     unsigned int t = 0;
     IIC_Start();
     IIC_SendData(0x9E); //device addr+write, 1001 1110B
@@ -50,14 +50,11 @@ unsigned int LM75_GetTemp(void)
     IIC_Start();
     IIC_SendData(0x9F); //device addr+read, 1001 1111B
     IIC_RecvACK();
-    hb = IIC_RecvData();
+    t = IIC_RecvData() << 8;
     IIC_SendACK();
-    lb = IIC_RecvData();
+    t += IIC_RecvData();
     IIC_SendNAK();
     IIC_Stop();
-    t |= hb; 
-    t <<= 8;
-    t |= lb;
     t >>= 5;
     //printf("LM75:%7.3f\r\n", (float)t*0.125);
     return t;
