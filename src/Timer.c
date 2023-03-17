@@ -1,9 +1,9 @@
 #include "Timer.h"
 #include "UART.h"
 
-extern bit Timer2_Act;
+extern volatile bit Timer2_Act;
 
-void Timer2_Init(void)
+void Timer2_Init(void)      //500毫秒@11.0592MHz
 {
     P_SW2 |= 0x80;
 	AUXR |= 0x04;			//定时器时钟1T模式

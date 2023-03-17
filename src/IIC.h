@@ -10,7 +10,7 @@ void IIC_Init();
 void IIC_Wait();
 void IIC_Start();
 void IIC_SendData(char dat);
-void IIC_RecvACK();
+bit IIC_RecvACK();
 char IIC_RecvData();
 void IIC_SendACK();
 void IIC_SendNAK();

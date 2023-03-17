@@ -5,6 +5,7 @@
 
 bit TK2_Old = 0;
 int led_duty = 0x00;
+
 void TK_Init()
 {
     P_SW2 |= 0x80;

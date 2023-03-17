@@ -4,19 +4,9 @@
 #include "DigitLED.h"
 #include "stdio.h"
 
-//sbit SDA = P2^4;
-//sbit SCL = P2^5;
-bit LM75_Busy = 0;
 unsigned int LM75_old = 0;
-
-void I2C_Isr() interrupt 24
-{
-    if (I2CMSST & 0x40)
-    {
-        I2CMSST &= ~0x40; //清中断标志
-        LM75_Busy = 0;
-    }
-}
+sbit SDA = P2^4;
+sbit SCL = P2^5;
 
 void LM75_Update()
 {
@@ -26,14 +16,14 @@ void LM75_Update()
     if(now != LM75_old)
     {
         LM75_old = now;
-        //UartSendStr("LM75: ");
-        //if (LM75_old / 1000 != 0)
-            //UartSend(LM75_old / 1000 + '0');
-        //UartSend(LM75_old % 1000 / 100 + '0');
-        //UartSend(LM75_old % 100 / 10 + '0');
-        //UartSend('.');
-        //UartSend(LM75_old % 10 + '0');
-        //UartSendStr("C\r\n");
+        UartSendStr("LM75: ");
+        if (LM75_old / 1000 != 0)
+            UartSend(LM75_old / 1000 + '0');
+        UartSend(LM75_old % 1000 / 100 + '0');
+        UartSend(LM75_old % 100 / 10 + '0');
+        UartSend('.');
+        UartSend(LM75_old % 10 + '0');
+        UartSendStr("C\r\n");
         DigitLED_Write(LM75_old);
     }
 }
@@ -46,7 +36,9 @@ unsigned int LM75_GetTemp(void)
     IIC_RecvACK();
     IIC_SendData(0x00); //temperature
     IIC_RecvACK();
+
     Delay30us();
+
     IIC_Start();
     IIC_SendData(0x9F); //device addr+read, 1001 1111B
     IIC_RecvACK();
@@ -56,81 +48,103 @@ unsigned int LM75_GetTemp(void)
     IIC_SendNAK();
     IIC_Stop();
     t >>= 5;
-    UartSend(t);
+    //UartSend(t);
     return t;
 }
 
 void IIC_Init()
 {
-    P_SW2 = 0x90;       // I2C P2.4/P2.5
+    P_SW2 |= 0x80;       // SW IIC P2.4/P2.5
     P2M0 |= 0x30;
     P2M1 |= 0x30; 
-    I2CCFG = 0xe0;      //使能I2C主机模式
-    I2CMSST = 0x00;
     UartInitReport("LM75");
 }
 
-/*
-void IIC_Wait()
-{
-    while (!(I2CMSST & 0x40));
-    I2CMSST &= ~0x40;
-}
-*/
-
 void IIC_Start()
 {
-    while (LM75_Busy);
-    LM75_Busy = 1;
-    P_SW2 |= 0x80;
-    I2CMSCR = 0x81;     //发送START命令
-    while (LM75_Busy);
+    SDA = 1;
+    SCL = 1;
+    Delay12us();
+    SDA = 0;
+    Delay12us();
+    SCL = 0;
 }
 
 void IIC_SendData(char dat)
 {
-    LM75_Busy = 1;
-    I2CTXD = dat;       //写数据到数据缓冲区
-    I2CMSCR = 0x82;     //发送SEND命令
-    while (LM75_Busy);
+    unsigned int i;
+    for(i=0; i<8; i++)
+    {
+        SCL = 0;
+        Delay12us();
+        if(dat & 0x80) 
+            SDA = 1;
+        else 
+            SDA = 0;
+        Delay12us();
+        SCL = 1;
+        dat <<= 1;
+    }
+    SCL = 0;
 }
 
-void IIC_RecvACK()
+bit IIC_RecvACK()
 {
-    LM75_Busy = 1;
-    I2CMSCR = 0x83;     //发送读ACK命令
-    while (LM75_Busy);
+    bit ack = 0;
+    SCL = 1;
+    Delay12us();
+    ack = SDA;
+    SCL = 0;
+    Delay12us();
+    return ack;
 }
 
 char IIC_RecvData()
 {
-    LM75_Busy = 1;
-    I2CMSCR = 0x84;     //发送RECV命令
-    while (LM75_Busy);
-    return I2CRXD;
+    unsigned int i;
+    unsigned char dat;
+    for(i=0; i<8; i++)
+    {
+        SCL = 1;
+        Delay12us();
+        dat <<= 1;
+        if(SDA) dat += 1;
+        SCL = 0;
+        Delay12us();
+    }
+    return dat;
 }
 
 void IIC_SendACK()
 {
-    LM75_Busy = 1;
-    I2CMSST = 0x00;     //设置ACK信号
-    I2CMSCR = 0x85;     //发送ACK命令
-    while (LM75_Busy);
+    SCL = 0;
+    SDA = 0;
+    Delay12us();
+    SCL = 1;
+    Delay12us();
+    SCL = 0;
+    SDA = 1;
+    Delay12us();
 }
 
 void IIC_SendNAK()
 {
-    LM75_Busy = 1;
-    I2CMSST = 0x01;     //设置NAK信号
-    I2CMSCR = 0x85;     //发送ACK命令
-    while (LM75_Busy);
+    SCL = 0;
+    SDA = 1;
+    Delay12us();
+    SCL = 1;
+    Delay12us();
+    SCL = 0;
+    SDA = 1;
+    Delay12us();
 }
 
 void IIC_Stop()
 {
-    LM75_Busy = 1;
-    I2CMSCR = 0x86;     //发送STOP命令
-    while (LM75_Busy);
-    P_SW2 &= ~0x80; 
+    SDA = 0;
+    SCL = 1;
+    Delay12us();
+    SDA = 1;
+    Delay12us();
 }
 
