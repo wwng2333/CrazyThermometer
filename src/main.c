@@ -4,10 +4,10 @@
 #include "DS18B20.h"
 #include "TouchKey.h"
 #include "Timer.h"
-#include "ADC.h"
+//#include "ADC.h"
 #include "IIC.h"
 
-extern volatile bit Timer2_Act = 0;
+extern volatile int Timer2_Act = 0;
 
 void main(void)
 {
@@ -20,13 +20,14 @@ void main(void)
     Timer2_Init();
     while (1)
     {
-        if (Timer2_Act)
+        TK2_Update();
+        //UartSend(Timer2_Act);
+        if (Timer2_Act > 100)
         {
+            Timer2_Act = 0;
             LM75_Update();
             //ADC_Update();
-            TK2_Update();
-            DS18B20_Update();
-            Timer2_Act = 0;
+            //DS18B20_Update();
         }
     }
 }

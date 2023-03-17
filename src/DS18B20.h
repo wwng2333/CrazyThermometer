@@ -2,7 +2,7 @@
 #define _DS18B20_H_
 #include "STC8H.h"
 #include "Delay.h"
-#include "string.h"
+//#include "string.h"
 
 sbit DS18B20_DQ = P2^3;
 

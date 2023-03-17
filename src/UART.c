@@ -45,6 +45,7 @@ void UartSend(char dat)
     SBUF = dat;
 }
 
+/*
 char putchar(char ch)
 {
     SBUF = ch;
@@ -52,20 +53,16 @@ char putchar(char ch)
     TI = 0;
     return ch;
 }
+*/
 
 void UartSendStr(char *p)
 {
     while (*p)
-    {
         UartSend(*p++);
-    }
 }
 
 void UartInitReport(char *p)
 {
-    while (*p)
-    {
-        UartSend(*p++);
-    }
+    UartSendStr(p);
     UartSendStr(":inited.\r\n");
 }

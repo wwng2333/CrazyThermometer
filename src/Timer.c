@@ -1,7 +1,7 @@
 #include "Timer.h"
 #include "UART.h"
 
-extern volatile bit Timer2_Act;
+extern volatile int Timer2_Act;
 
 void Timer2_Init(void)      //500毫秒@11.0592MHz
 {
@@ -18,5 +18,5 @@ void Timer2_Init(void)      //500毫秒@11.0592MHz
 
 void Timer2_Isr(void) interrupt 12
 {
-    Timer2_Act = 1;
+    Timer2_Act++;
 }
