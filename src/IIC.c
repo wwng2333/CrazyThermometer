@@ -26,14 +26,14 @@ void LM75_Update()
     if(now != LM75_old)
     {
         LM75_old = now;
-        UartSendStr("LM75: ");
-        if (LM75_old / 1000 != 0)
-            UartSend(LM75_old / 1000 + '0');
-        UartSend(LM75_old % 1000 / 100 + '0');
-        UartSend(LM75_old % 100 / 10 + '0');
-        UartSend('.');
-        UartSend(LM75_old % 10 + '0');
-        UartSendStr("C\r\n");
+        //UartSendStr("LM75: ");
+        //if (LM75_old / 1000 != 0)
+            //UartSend(LM75_old / 1000 + '0');
+        //UartSend(LM75_old % 1000 / 100 + '0');
+        //UartSend(LM75_old % 100 / 10 + '0');
+        //UartSend('.');
+        //UartSend(LM75_old % 10 + '0');
+        //UartSendStr("C\r\n");
         DigitLED_Write(LM75_old);
     }
 }
@@ -46,7 +46,7 @@ unsigned int LM75_GetTemp(void)
     IIC_RecvACK();
     IIC_SendData(0x00); //temperature
     IIC_RecvACK();
-    Delay500us();
+    Delay30us();
     IIC_Start();
     IIC_SendData(0x9F); //device addr+read, 1001 1111B
     IIC_RecvACK();
@@ -56,7 +56,7 @@ unsigned int LM75_GetTemp(void)
     IIC_SendNAK();
     IIC_Stop();
     t >>= 5;
-    //printf("LM75:%7.3f\r\n", (float)t*0.125);
+    UartSend(t);
     return t;
 }
 
@@ -89,7 +89,6 @@ void IIC_Start()
 
 void IIC_SendData(char dat)
 {
-    while (LM75_Busy);
     LM75_Busy = 1;
     I2CTXD = dat;       //写数据到数据缓冲区
     I2CMSCR = 0x82;     //发送SEND命令
