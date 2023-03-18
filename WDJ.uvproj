@@ -476,6 +476,16 @@
               <FileType>5</FileType>
               <FilePath>.\src\IIC.h</FilePath>
             </File>
+            <File>
+              <FileName>IAP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\IAP.c</FilePath>
+            </File>
+            <File>
+              <FileName>IAP.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\IAP.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
