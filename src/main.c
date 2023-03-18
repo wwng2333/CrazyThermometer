@@ -6,6 +6,7 @@
 #include "Timer.h"
 //#include "ADC.h"
 #include "IIC.h"
+#include "IAP.h"
 
 extern int Timer2_Act;
 extern bit OnMessage, SendTemp;
@@ -19,16 +20,16 @@ void main(void)
     TK_Init();
     DS18B20_UART_InitReport();
     Timer2_Init();
+    IAP_SetBright();
     while (1)
     {
         if(OnMessage) 
         {
             UartOnMessage();
-        } else if(Timer2_Act) {
-            TK2_Update();
+        } else if(Timer2_Act > 128) {
+            //TK2_Update();
             LM75_Update(1);
             DS18B20_Update(0);
-            Timer2_Act = 0;
         }
     }
 }

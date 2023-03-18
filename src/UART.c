@@ -1,5 +1,6 @@
 #include "UART.h"
 #include "string.h"
+#include "IAP.h"
 
 bit busy;
 char wptr;
@@ -89,6 +90,10 @@ void UartOnMessage(void)
         IAP_CONTR |= 0x20;
     } else if(strcmp(buffer, "AT+TEMP\r\n") == 0) {
         SendTemp = 2;
+    } else if(strcmp(buffer, "AT+IAPR\r\n") == 0) {
+        IAP_ReadBright();
+    } else if(strcmp(buffer, "AT+IAPW\r\n") == 0) {
+        IAP_SaveBright();
     } else {
         UartSendStr("ERROR\r\n");
     }

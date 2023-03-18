@@ -1,5 +1,27 @@
 #include "IAP.h"
 #include "UART.h"
+#include "DigitLED.h"
+#include "intrins.h"
+
+void IAP_SaveBright(void)
+{
+    extern int led_duty;
+    IapErase(BRIGHTNESS);
+    IapProgram(BRIGHTNESS, led_duty);
+}
+
+void IAP_SetBright(void)
+{
+    int i;
+    i = IapRead(BRIGHTNESS);
+    if((i > 0) && (i < 0x08))
+        DigitLED_Duty(i);
+}
+
+void IAP_ReadBright(void)
+{
+    UartSend(IapRead(BRIGHTNESS));
+}
 
 void IapIdle()
 {
