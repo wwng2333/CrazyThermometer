@@ -1,12 +1,17 @@
 #include "UART.h"
+#include "string.h"
 
 bit busy;
 char wptr;
 char rptr;
 char buffer[16];
 
+volatile bit OnMessage = 0;
+volatile unsigned int SendTemp = 0;
+
 void UartIsr() interrupt 4
 {
+    extern bit OnMessage;
     if (TI)
     {
         TI = 0;
@@ -17,6 +22,7 @@ void UartIsr() interrupt 4
         RI = 0;
         buffer[wptr++] = SBUF;
         wptr &= 0x0f;
+        if(SBUF == 0x0A) OnMessage = 1;
     }
 }
 
@@ -34,7 +40,7 @@ void UartInit()
     busy = 0;
     ES = 1;
     EA = 1;
-    UartInitReport("UART0");
+    UartSendOK();
     P_SW2 &= ~0x80;
 }
 
@@ -63,6 +69,30 @@ void UartSendStr(char *p)
 
 void UartInitReport(char *p)
 {
-    UartSendStr(p);
-    UartSendStr(":inited.\r\n");
+    //UartSendStr(p);
+    //UartSendStr(":inited.\r\n");
+}
+
+void UartSendOK(void)
+{
+    UartSendStr("\r\nOK\r\n");
+}
+
+void UartOnMessage(void)
+{    
+    //UartSendStr(buffer);
+    if(strcmp(buffer, "AT\r\n") == 0)
+    {
+        UartSendOK();
+    } else if(strcmp(buffer, "AT+RST\r\n") == 0) {
+        P_SW2 |= 0x80;
+        IAP_CONTR |= 0x20;
+    } else if(strcmp(buffer, "AT+TEMP\r\n") == 0) {
+        SendTemp = 2;
+    } else {
+        UartSendStr("ERROR\r\n");
+    }
+    memset(buffer, 0, sizeof(buffer)/ sizeof(char));
+    wptr = 0;
+    OnMessage = 0;
 }

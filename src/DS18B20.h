@@ -7,7 +7,7 @@
 sbit DS18B20_DQ = P2^3;
 
 void DS18B20_UART_InitReport();
-void DS18B20_Update();
+void DS18B20_Update(bit en_led);
 unsigned int DS18B20_CheckDevice(void);
 unsigned int DS18B20_WaitReady(void);
 void DS18B20_Init();

@@ -7,7 +7,8 @@
 //#include "ADC.h"
 #include "IIC.h"
 
-extern volatile int Timer2_Act = 0;
+extern int Timer2_Act;
+extern bit OnMessage, SendTemp;
 
 void main(void)
 {
@@ -20,14 +21,14 @@ void main(void)
     Timer2_Init();
     while (1)
     {
-        TK2_Update();
-        //UartSend(Timer2_Act);
-        if (Timer2_Act > 100)
+        if(OnMessage) 
         {
+            UartOnMessage();
+        } else if(Timer2_Act) {
+            TK2_Update();
+            LM75_Update(1);
+            DS18B20_Update(0);
             Timer2_Act = 0;
-            LM75_Update();
-            //ADC_Update();
-            //DS18B20_Update();
         }
     }
 }

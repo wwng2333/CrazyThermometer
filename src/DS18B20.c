@@ -24,14 +24,13 @@ void DS18B20_UART_InitReport()
     }
 }
 
-void DS18B20_Update()
-{
-    extern unsigned int old;
+void DS18B20_Update(bit en_led)
+{ 
+    extern unsigned int old, SendTemp;
     unsigned int now;
     now = DS18B20_GetTemp();
-    if(now != old)
+    if(SendTemp) 
     {
-        old = now;
         UartSendStr("18B20: ");
         if (flag_temper == 1)
             UartSend('-');
@@ -42,7 +41,13 @@ void DS18B20_Update()
         UartSend('.');
         UartSend(old % 10 + '0');
         UartSendStr("C\r\n");
-        DigitLED_Write(old);
+        SendTemp--;
+        UartSendOK();
+        }
+    if(now != old)
+    {
+        old = now;
+        if(en_led) DigitLED_Write(old);
     }
 }
 

@@ -8,14 +8,13 @@ unsigned int LM75_old = 0;
 sbit SDA = P2^4;
 sbit SCL = P2^5;
 
-void LM75_Update()
+void LM75_Update(bit en_led)
 {
-    extern unsigned int LM75_old;
+    extern unsigned int LM75_old, SendTemp;
     unsigned int now;
     now = LM75_GetTemp();
-    if(now != LM75_old)
+    if(SendTemp)
     {
-        LM75_old = now;
         UartSendStr("LM75: ");
         if (LM75_old / 1000 != 0)
             UartSend(LM75_old / 1000 + '0');
@@ -24,7 +23,12 @@ void LM75_Update()
         UartSend('.');
         UartSend(LM75_old % 10 + '0');
         UartSendStr("C\r\n");
-        DigitLED_Write(LM75_old);
+        SendTemp--;
+    }
+    if(now != LM75_old)
+    {
+        LM75_old = now;
+        if(en_led) DigitLED_Write(LM75_old);
     }
 }
 

@@ -3,7 +3,7 @@
 #include "Delay.h"
 #include "DigitLED.h"
 #include <stdio.h>
-
+/*
 #define CPUIDBASE 0xfde0
 #define VREF_ADDR (*(unsigned int volatile xdata *)(CPUIDBASE + 0x07))
 
@@ -51,7 +51,7 @@ void ADC_Update(void)
         //else DigitLED_Duty(0x04); //100%
     }
 }
-/*
+
 int ADC_Read(void)
 {
     int *BGV;

@@ -10,4 +10,6 @@ void UartInit();
 void UartSend(char dat);
 void UartSendStr(char *p);
 void UartInitReport(char *p);
+void UartOnMessage(void);
+void UartSendOK(void);
 #endif
