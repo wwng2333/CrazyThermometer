@@ -3,7 +3,7 @@
 #include "UART.h"
 #include "stdio.h"
 
-char code digit[10] = {
+static char code digit[10] = {
     0xAF,
     0x28,
     0x9B,
@@ -16,14 +16,14 @@ char code digit[10] = {
     0xBE,
 };
 
-void DigitLED_Init(void)
+void DigitLED_Init(unsigned char dat)
 {
     P_SW2 |= 0x80;
     COMEN = 0x83;
     SEGENH = 0xFF;
     LEDCKS = 0x1E;
     LEDCTRL = 0x80;
-    LEDCTRL |= 0x07; //12.5%
+    LEDCTRL |= dat; //12.5%
     P_SW2 &= ~0x80; 
     UartInitReport("Digit");
 }

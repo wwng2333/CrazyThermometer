@@ -89,7 +89,7 @@ void UartOnMessage(void)
         P_SW2 |= 0x80;
         IAP_CONTR |= 0x20;
     } else if(strcmp(buffer, "AT+TEMP\r\n") == 0) {
-        SendTemp = 2;
+        SendTemp = 1;
     } else if(strcmp(buffer, "AT+IAPR\r\n") == 0) {
         IAP_ReadBright();
     } else if(strcmp(buffer, "AT+IAPW\r\n") == 0) {
