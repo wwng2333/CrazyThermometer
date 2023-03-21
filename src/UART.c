@@ -9,6 +9,7 @@ char buffer[16];
 
 volatile bit OnMessage = 0;
 volatile unsigned int SendTemp = 0;
+extern int SensorEnableCount;
 
 void UartIsr() interrupt 4
 {
@@ -76,7 +77,7 @@ void UartInitReport(char *p)
 
 void UartSendOK(void)
 {
-    UartSendStr("\r\nOK\r\n");
+    UartSendStr("OK\r\n");
 }
 
 void UartOnMessage(void)
@@ -89,7 +90,7 @@ void UartOnMessage(void)
         P_SW2 |= 0x80;
         IAP_CONTR |= 0x20;
     } else if(strcmp(buffer, "AT+TEMP\r\n") == 0) {
-        SendTemp = 1;
+        SendTemp = SensorEnableCount;
     } else if(strcmp(buffer, "AT+IAPR\r\n") == 0) {
         IAP_ReadBright();
     } else if(strcmp(buffer, "AT+IAPW\r\n") == 0) {

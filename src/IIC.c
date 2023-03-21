@@ -4,6 +4,7 @@
 #include "DigitLED.h"
 #include "stdio.h"
 
+extern int SensorEnableCount;
 unsigned int LM75_old = 0;
 sbit SDA = P2^4;
 sbit SCL = P2^5;
@@ -61,6 +62,7 @@ void IIC_Init()
     P_SW2 |= 0x80;       // SW IIC P2.4/P2.5
     P2M0 |= 0x30;
     P2M1 |= 0x30; 
+    SensorEnableCount++;
     UartInitReport("LM75");
 }
 

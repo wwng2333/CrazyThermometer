@@ -3,26 +3,9 @@
 #include "Delay.h"
 #include "UART.h"
 
+extern int SensorEnableCount;
 unsigned char flag_temper = 0;
 unsigned int old = 0;
-
-void DS18B20_UART_InitReport()
-{
-    switch(DS18B20_CheckDevice())
-    {
-        case 0: 
-            UartInitReport("18B20");
-            break;
-        case 1: 
-            UartInitReport("18B20^1");
-            //UartSendStr("18B20: NO ACK!\r\n");
-            break;
-        case 2: 
-            UartInitReport("18B20^2");
-            //UartSendStr("18B20: release failed!\r\n");
-            break;
-    }
-}
 
 void DS18B20_Update(bit en_led)
 { 
@@ -51,10 +34,12 @@ void DS18B20_Update(bit en_led)
     }
 }
 
-unsigned int DS18B20_CheckDevice(void)
+void DS18B20_Init(void)
 {
+    SensorEnableCount++;
     DS18B20_Reset();
-    return DS18B20_WaitReady();
+    DS18B20_WaitReady();
+    DS18B20_GetTemp();
 }
 
 void DS18B20_Write_Byte(unsigned char dat)
@@ -101,12 +86,18 @@ unsigned char DS18B20_Read_Byte()
     return dat;
 }
 
-void DS18B20_Init()
+void DS18B20_GPIO_Init()
 {
     P_SW2 |= 0x80;
     P2M0 |= 0x08;
     P2M1 |= 0x08;
     P_SW2 &= ~0x80;
+}
+
+unsigned int DS18B20_CheckDevice(void)
+{
+    DS18B20_Reset();
+    return DS18B20_WaitReady();
 }
 
 void DS18B20_Reset()
@@ -124,7 +115,7 @@ void DS18B20_Reset()
 unsigned int DS18B20_WaitReady(void)
 {
     unsigned int count = 0;
-    DS18B20_Init();
+    DS18B20_GPIO_Init();
     while((DS18B20_DQ == 1) && (count < 240))
     {
         Delay2us();
