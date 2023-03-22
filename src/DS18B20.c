@@ -26,11 +26,9 @@ void DS18B20_Update(bit en_led)
         UartSendStr("C\r\n");
         SendTemp--;
         UartSendOK();
-        }
-    if(now != old)
-    {
+    } else if(now != old && (en_led)) {
         old = now;
-        if(en_led) DigitLED_Write(old);
+        DigitLED_Write(old);
     }
 }
 

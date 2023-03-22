@@ -25,11 +25,10 @@ void LM75_Update(bit en_led)
         UartSend(LM75_old % 10 + '0');
         UartSendStr("C\r\n");
         SendTemp--;
-    }
-    if(now != LM75_old)
+    } else if(now != LM75_old && en_led)
     {
         LM75_old = now;
-        if(en_led) DigitLED_Write(LM75_old);
+        DigitLED_Write(LM75_old);
     }
 }
 

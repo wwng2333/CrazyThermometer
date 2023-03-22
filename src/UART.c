@@ -87,23 +87,20 @@ void ClearBuffer(char *buff)
 void UartOnMessage(void)
 {    
     char cmd[8];
-    int i, n=0;
+    int i;
     if(buffer[0] == 'A' && buffer[1] == 'T' && buffer[wptr-1] == '\n')
     {
-        UartSendStr("recv pack\r\n");
+        //UartSendStr("recv pack\r\n");
         if(buffer[2] == '+')
         {
             for(i=3; i<wptr; i++) 
             {
                 if(buffer[i] == '=')
                 {
-                    n = i - 3;
                     break;
-                } else {
-                    n = wptr;
                 }
             }
-            memcpy(cmd, buffer+3, n);
+            memcpy(cmd, buffer+3, i);
             UartSendStr(cmd);
             UartSendStr("\n");
             //ClearBuffer(cmd);
