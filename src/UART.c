@@ -97,18 +97,15 @@ void UartOnMessage(void)
             {
                 if(buffer[i] == '=')
                 {
-                    n = i;
+                    n = i - 3;
                     break;
                 } else {
                     n = wptr;
                 }
             }
-            if(n) 
-            {
-                memcpy(cmd, buffer+3, n-2);
-                UartSendStr(cmd);
-                UartSendStr("\n");
-            }
+            memcpy(cmd, buffer+3, n);
+            UartSendStr(cmd);
+            UartSendStr("\n");
             //ClearBuffer(cmd);
         } else {
             UartSendOK();
