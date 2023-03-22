@@ -7,6 +7,7 @@
 
 void IAP_SaveBright(void);
 void IAP_SetBright(void);
+int IAP_GetBright(void);
 void IAP_ReadBright(void);
 
 void IapIdle();

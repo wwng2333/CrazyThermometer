@@ -4,5 +4,6 @@
 void DigitLED_Init(unsigned char dat);
 void DigitLED_Write(unsigned int dat);
 void DigitLED_EnableDP(int dat);
-void DigitLED_Duty(unsigned int dat);
+void DigitLED_SetDuty(unsigned int dat);
+
 #endif

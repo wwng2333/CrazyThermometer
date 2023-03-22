@@ -56,7 +56,7 @@ void DigitLED_Write(unsigned int dat)
     P_SW2 &= ~0x80; 
 }
 
-void DigitLED_Duty(unsigned int dat)
+void DigitLED_SetDuty(unsigned int dat)
 {
     P_SW2 |= 0x80;
     LEDCTRL = 0x80 | dat;

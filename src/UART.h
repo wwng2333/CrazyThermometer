@@ -12,4 +12,5 @@ void UartSendStr(char *p);
 void UartInitReport(char *p);
 void UartOnMessage(void);
 void UartSendOK(void);
+void ClearBuffer(char *buff);
 #endif

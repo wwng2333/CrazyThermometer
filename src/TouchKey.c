@@ -57,7 +57,7 @@ void TK2_Update(void)
             UartSendStr("TK2 toggled.\r\n");
             if(led_duty < 0x07) led_duty += 0x01;
             else led_duty = 0;
-            DigitLED_Duty(led_duty);
+            DigitLED_SetDuty(led_duty);
         }
     }
 }

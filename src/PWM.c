@@ -16,3 +16,4 @@ void PWM_Init(void)
     PWMA_BKR = 0x80;
     PWMA_CR1 = 0x01;
 }
+

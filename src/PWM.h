@@ -1,9 +1,7 @@
-#ifndef __IAP_H__
-#define __IAP_H__
+#ifndef __PWM_H__
+#define __PWM_H__
 
 #include "STC8H.h"
-
-sbit CPWM = P1^0;
 
 void PWM_Init(void);
 

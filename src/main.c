@@ -9,30 +9,33 @@
 #include "IAP.h"
 #include "PWM.h"
 
-extern int Timer2_Act, SensorEnableCount = 0;
-extern bit OnMessage, SendTemp;
+extern int Timer2Counter;
+extern int SensorEnableCount = 0;
+extern int DigitLEDDuty = 0;
+extern bit UartOnMsg, SendTemp;
 
 void main(void)
 {
+    DigitLEDDuty = IAP_GetBright();
     UartInit();
+    DS18B20_Init();
     IIC_Init();
     //ADC_Init();
-    DigitLED_Init(0x07); // LED 12.5% duty cycle
+    DigitLED_Init(DigitLEDDuty); // LED 12.5% duty cycle
     PWM_Init();
     //TK_Init();
-    DS18B20_Init();
     Timer2_Init();
-    IAP_SetBright();
-    while (1)
+
+    while (1)                       //主循环
     {
-        if(OnMessage) 
-            UartOnMessage();
-        if(Timer2_Act > 100) {
-            LM75_Update(0);
-            DS18B20_Update(1);
-            Timer2_Act = 0;
-        } else {
-            //TK2_Update();
+        if(UartOnMsg)               //串口收到消息
+            UartOnMessage();        //处理消息
+        if(Timer2Counter > 100) {   //定时器触发
+            LM75_Update(0);         //LM75处理函数，数码管不显示
+            DS18B20_Update(1);      //18B20处理函数，数码管显示其温度
+            Timer2Counter = 0;      //清除标志
+        } else {                    //空闲
+            //TK2_Update();         //处理按键
         }
     }
 }

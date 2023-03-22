@@ -15,7 +15,12 @@ void IAP_SetBright(void)
     int i;
     i = IapRead(BRIGHTNESS);
     if((i > 0) && (i < 0x08))
-        DigitLED_Duty(i);
+        DigitLED_SetDuty(i);
+}
+
+int IAP_GetBright(void)
+{
+    return IapRead(BRIGHTNESS);
 }
 
 void IAP_ReadBright(void)

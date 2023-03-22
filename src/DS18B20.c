@@ -36,10 +36,9 @@ void DS18B20_Update(bit en_led)
 
 void DS18B20_Init(void)
 {
+    DS18B20_GPIO_Init();
     SensorEnableCount++;
-    DS18B20_Reset();
-    DS18B20_WaitReady();
-    DS18B20_GetTemp();
+    DS18B20_CheckDevice();
 }
 
 void DS18B20_Write_Byte(unsigned char dat)
@@ -115,7 +114,6 @@ void DS18B20_Reset()
 unsigned int DS18B20_WaitReady(void)
 {
     unsigned int count = 0;
-    DS18B20_GPIO_Init();
     while((DS18B20_DQ == 1) && (count < 240))
     {
         Delay2us();
