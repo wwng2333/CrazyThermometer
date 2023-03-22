@@ -8,9 +8,19 @@ char wptr;
 char rptr;
 char buffer[16];
 
-volatile bit UartOnMsg = 0;
-volatile unsigned int SendTemp = 0;
+bit UartOnMsg = 0;
+unsigned int SendTemp = 0;
 extern int SensorEnableCount;
+
+typedef enum
+{
+    TEMP,
+    RST,
+    IAPR,
+    IAPW,
+    NONE,
+    _NULL,
+} COMMAND;
 
 void UartIsr() interrupt 4
 {
@@ -54,13 +64,14 @@ void UartSend(char dat)
     SBUF = dat;
 }
 
+/*
 char putchar(char ch)
 {
     SBUF = ch;
     while(TI == 0);
     TI = 0;
     return ch;
-}
+}*/
 
 void UartSendStr(char *p)
 {
@@ -86,45 +97,62 @@ void ClearBuffer(char *buff)
 
 void UartOnMessage(void)
 {    
-    char cmd[8];
-    int i;
+    char cmd_dat[8] = {0};
+    int i, n;
+    COMMAND cmd = _NULL;
+
     if(buffer[0] == 'A' && buffer[1] == 'T' && buffer[wptr-1] == '\n')
     {
-        //UartSendStr("recv pack\r\n");
+        //收全一个数据包，开始处理
         if(buffer[2] == '+')
         {
-            for(i=3; i<wptr; i++) 
+            for(i=3; i<wptr; i++) //判断是否有=
             {
                 if(buffer[i] == '=')
                 {
+                    n = i;
                     break;
+                } else {
+                    n = wptr;
                 }
             }
-            memcpy(cmd, buffer+3, i);
-            UartSendStr(cmd);
-            UartSendStr("\n");
-            //ClearBuffer(cmd);
+            memcpy(cmd_dat, buffer+3, n);
+            //UartSendStr(cmd_dat);
+            //UartSendStr("\n");
+            if(strcmp("TEMP", cmd_dat) <= 0) 
+                cmd = TEMP;
+            else if(strcmp("RST", cmd_dat) <= 0) 
+                cmd = RST;
+            else if(strcmp("IAPR", cmd_dat) <= 0) 
+                cmd = IAPR;
+            else if(strcmp("IAPW", cmd_dat) <= 0) 
+                cmd = IAPW;
         } else {
-            UartSendOK();
+            cmd = NONE;
         }
 
-         if(strcmp(buffer, "AT+RST\r\n") == 0) {
+        switch(cmd)
+        {
+        case TEMP:
+            SendTemp = SensorEnableCount;
+        break;
+        case RST:
             P_SW2 |= 0x80;
             IAP_CONTR |= 0x20;
-        } else if(strcmp(buffer, "AT+TEMP\r\n") == 0) {
-            SendTemp = SensorEnableCount;
-        } else if(strcmp(buffer, "AT+IAPR\r\n") == 0) {
+            break;
+        case IAPR:
             IAP_ReadBright();
-        } else if(strcmp(buffer, "AT+IAPW\r\n") == 0) {
+            break;
+        case IAPW:
             IAP_SaveBright();
-        } else {
-            UartSendStr("ERROR\r\n");
+            break;
+        case NONE:
+            UartSendOK();
+            break;
+        default: 
+            UartSendStr("ERROR\n");
         }
     }
-    //UartSendStr(buffer);
-
-
-    //memset(buffer, 0, sizeof(buffer)/ sizeof(char));
     ClearBuffer(buffer);
     wptr = 0;
     UartOnMsg = 0;

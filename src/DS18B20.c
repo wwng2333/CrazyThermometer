@@ -5,30 +5,31 @@
 
 extern int SensorEnableCount;
 unsigned char flag_temper = 0;
-unsigned int old = 0;
+unsigned int DS18B20_old = 0;
 
 void DS18B20_Update(bit en_led)
 { 
-    extern unsigned int old, SendTemp;
+    extern unsigned int DS18B20_old, SendTemp;
     unsigned int now;
     now = DS18B20_GetTemp();
     if(SendTemp) 
     {
+        DS18B20_old = now;
         UartSendStr("18B20: ");
         if (flag_temper == 1)
             UartSend('-');
-        if (old / 1000 != 0)
-            UartSend(old / 1000 + '0');
-        UartSend(old % 1000 / 100 + '0');
-        UartSend(old % 100 / 10 + '0');
+        if (now / 1000 != 0)
+            UartSend(now / 1000 + '0');
+        UartSend(now % 1000 / 100 + '0');
+        UartSend(now % 100 / 10 + '0');
         UartSend('.');
-        UartSend(old % 10 + '0');
+        UartSend(now % 10 + '0');
         UartSendStr("C\r\n");
         SendTemp--;
         UartSendOK();
-    } else if(now != old && (en_led)) {
-        old = now;
-        DigitLED_Write(old);
+    } else if(now != DS18B20_old && (en_led)) {
+        DS18B20_old = now;
+        DigitLED_Write(now);
     }
 }
 
