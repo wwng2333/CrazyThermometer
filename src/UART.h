@@ -13,4 +13,5 @@ void UartInitReport(char *p);
 void UartOnMessage(void);
 void UartSendOK(void);
 void ClearBuffer(char *buff);
+int strfind(const char * _str, char val);
 #endif

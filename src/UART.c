@@ -77,14 +77,14 @@ void UartSend(char dat)
     SBUF = dat;
 }
 
-/*
+
 char putchar(char ch)
 {
     SBUF = ch;
     while(TI == 0);
     TI = 0;
     return ch;
-}*/
+}
 
 void UartSendStr(char *p)
 {
@@ -108,10 +108,17 @@ void ClearBuffer(char *buff)
     memset(buff, 0, sizeof(buff)/ sizeof(char));
 }
 
+int strfind(const char * _str, char val)
+{
+	const char *index = _str;
+	char *pp = strchr(_str, val);
+	return pp - _str;
+}
+
 void UartOnMessage(void)
-{    
-    char cmd_dat[] = {0}, cmd_val = 0xa;
-    int i, cmd_len;
+{
+    char cmd_dat[10] = {0}, cmd_val = 0xaa;
+    int cmd_len = 0;
     COMMAND cmd = _NULL;
 
     if(buffer[0] == 'A' && buffer[1] == 'T' && buffer[wptr-1] == '\n')
@@ -119,21 +126,13 @@ void UartOnMessage(void)
         //收全一个数据包，开始处理
         if(buffer[2] == '+')
         {
-            for(i=3; i<wptr; i++) //判断是否有=
-            {
-                if(buffer[i] == 0x3D)
-                {
-                    cmd_len = i;
-                    cmd_val = buffer[i];
-                    break;
-                } else {
-                    cmd_len = wptr;
-                }
-            }
-            memcpy(cmd_dat, buffer+3, cmd_len); //提取AT+[..]=x
+            cmd_len = strfind(buffer, '=');
+		    cmd_len = (cmd_len) ? cmd_len-3 : sizeof(buffer);
+            memcpy(cmd_dat, buffer+3*sizeof(char), cmd_len); //提取AT+[..]=x
+            //cmd_dat[cmd_len] = '\0';
             UartSendStr(cmd_dat);
-            //if(cmd_val != 0xaa) UartSend(cmd_len);
-            //UartSendStr("\r\n");
+            //printf("%d\n", cmd_len);
+            //if(cmd_val != 0xaa) UartSend(cmd_val);
             if(strcmp("TEMP", cmd_dat) <= 0) 
                 cmd = TEMP;
             else if(strcmp("RST", cmd_dat) <= 0) 
@@ -146,30 +145,30 @@ void UartOnMessage(void)
             cmd = NONE;
         }
 
-        ClearBuffer(buffer); //清buff
-        wptr = 0;
-
         switch(cmd)
         {
-        case TEMP:
-            SendTemp = SensorEnableCount;
-        break;
-        case RST:
-            P_SW2 |= 0x80;
-            IAP_CONTR |= 0x20;
+            case TEMP:
+                SendTemp = SensorEnableCount;
             break;
-        case IAPR:
-            IAP_ReadBright();
-            break;
-        case IAPW:
-            IAP_SaveBright();
-            break;
-        case NONE:
-            UartSendOK();
-            break;
-        default: 
-            UartSendStr("ERROR\r\n");
+            case RST:
+                P_SW2 |= 0x80;
+                IAP_CONTR |= 0x20;
+                break;
+            case IAPR:
+                IAP_ReadBright();
+                break;
+            case IAPW:
+                IAP_SaveBright();
+                break;
+            case NONE:
+                UartSendOK();
+                break;
+            default: 
+                UartSendStr("ERROR\r\n");
         }
+
+        ClearBuffer(buffer); //清buff
+        wptr = 0;
+        UartOnMsg = 0;
     }
-    UartOnMsg = 0;
 }
