@@ -112,7 +112,7 @@ int strfind(const char * _str, char val)
 {
 	const char *index = _str;
 	char *pp = strchr(_str, val);
-	return pp - _str;
+	return pp ? pp - _str : 0;
 }
 
 void UartOnMessage(void)
