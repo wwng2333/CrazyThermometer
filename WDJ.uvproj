@@ -491,6 +491,11 @@
               <FileType>5</FileType>
               <FilePath>.\src\PWM.h</FilePath>
             </File>
+            <File>
+              <FileName>main.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\main.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

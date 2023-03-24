@@ -88,8 +88,10 @@ char putchar(char ch)
 
 void UartSendStr(char *p)
 {
-    while (*p)
+    while (*p != '\0')
+    {
         UartSend(*p++);
+    }
 }
 
 void UartInitReport(char *p)
@@ -110,7 +112,7 @@ void ClearBuffer(char *buff)
 
 int strfind(const char * _str, char val)
 {
-	const char *index = _str;
+	volatile const char *index = _str;
 	char *pp = strchr(_str, val);
 	return pp ? pp - _str : 0;
 }
@@ -129,7 +131,7 @@ void UartOnMessage(void)
             cmd_len = strfind(buffer, '=');
 		    cmd_len = (cmd_len) ? cmd_len-3 : sizeof(buffer);
             memcpy(cmd_dat, buffer+3*sizeof(char), cmd_len); //提取AT+[..]=x
-            //cmd_dat[cmd_len] = '\0';
+            cmd_dat[cmd_len] = '\0';
             UartSendStr(cmd_dat);
             //printf("%d\n", cmd_len);
             //if(cmd_val != 0xaa) UartSend(cmd_val);
