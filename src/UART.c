@@ -14,6 +14,8 @@ extern int SensorEnableCount;
 
 char code *STCISPCMD = "@STCISP#";
 char ISP_INDEX;
+xdata char cmd_dat[16] = {0};
+int cmd_len = 0;
 
 typedef enum
 {
@@ -119,8 +121,7 @@ int strfind(const char * _str, char val)
 
 void UartOnMessage(void)
 {
-    char cmd_dat[10] = {0}, cmd_val = 0xaa;
-    int cmd_len = 0;
+    char cmd_val = 0xaa;
     COMMAND cmd = _NULL;
 
     if(buffer[0] == 'A' && buffer[1] == 'T' && buffer[wptr-1] == '\n')
@@ -129,13 +130,13 @@ void UartOnMessage(void)
         if(buffer[2] == '+')
         {
             cmd_len = strfind(buffer, '=');
-		    cmd_len = (cmd_len) ? cmd_len-3 : sizeof(buffer);
+		    cmd_len = (cmd_len) ? cmd_len-3 : wptr-5;
             memcpy(cmd_dat, buffer+3*sizeof(char), cmd_len); //提取AT+[..]=x
-            cmd_dat[cmd_len] = '\0';
+            //cmd_dat[cmd_len] = '\0';
             UartSendStr(cmd_dat);
-            //printf("%d\n", cmd_len);
+            printf("%d\n", cmd_len);
             //if(cmd_val != 0xaa) UartSend(cmd_val);
-            if(strcmp("TEMP", cmd_dat) <= 0) 
+            if(strcmp("TEMP", cmd_dat) == 0) 
                 cmd = TEMP;
             else if(strcmp("RST", cmd_dat) <= 0) 
                 cmd = RST;
@@ -147,11 +148,14 @@ void UartOnMessage(void)
             cmd = NONE;
         }
 
+        ClearBuffer(cmd_dat);
+        cmd_len = 0;
+
         switch(cmd)
         {
             case TEMP:
                 SendTemp = SensorEnableCount;
-            break;
+                break;
             case RST:
                 P_SW2 |= 0x80;
                 IAP_CONTR |= 0x20;
