@@ -26,16 +26,25 @@ void PWM_Update(void)
     if(PwmRise) 
     {
         PwmNow += 5;
-        if(PwmNow >= 200) PwmRise = 0;
+        if(PwmNow >= 200) //Change status
+        {
+            PwmRise = 0;
+            Delay50ms();
+        }
     } else {
         PwmNow -= 5;
-        if(PwmNow <= 10) PwmRise = 1;
+        if(PwmNow <= 0) //Change status
+        {
+            PwmRise = 1;
+            Delay50ms();
+        }
     }
+    /*
     UartSendStr("PWM: ");
     if (PwmNow / 1000 != 0)
         UartSend(PwmNow / 1000 + '0');
     UartSend(PwmNow % 1000 / 100 + '0');
-    UartSend(PwmNow % 100 / 10 + '0');
+    UartSend(PwmNow % 100 / 10 + '0');*/
     P_SW2 |= 0x80;
     PWMA_CCR1 = PwmNow;
     Delay50ms();
