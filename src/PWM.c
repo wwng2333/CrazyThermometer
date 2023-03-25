@@ -34,11 +34,12 @@ void PWM_Update(void)
     } else {
         PwmNow -= 5;
     }
+    /*
     UartSendStr("PWM: ");
     if (PwmNow / 1000 != 0)
         UartSend(PwmNow / 1000 + '0');
     UartSend(PwmNow % 1000 / 100 + '0');
-    UartSend(PwmNow % 100 / 10 + '0');
+    UartSend(PwmNow % 100 / 10 + '0'); */
     P_SW2 |= 0x80;
     PWMA_CCR1 = PwmNow;
     Delay50ms();
