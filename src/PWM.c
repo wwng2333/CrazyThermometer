@@ -2,7 +2,7 @@
 #include "UART.h"
 #include "Delay.h"
 
-int PwmNow = 0;
+int PwmNow = 5;
 bit PwmRise = 1;
 
 void PWM_Init(void)
@@ -23,28 +23,22 @@ void PWM_Init(void)
 
 void PWM_Update(void)
 {
+    if(PwmNow < 1 || PwmNow > 200)   //Change status
+    {
+        PwmRise = ~PwmRise;
+        Delay50ms();
+    }
     if(PwmRise) 
     {
         PwmNow += 5;
-        if(PwmNow == 200) //Change status
-        {
-            PwmRise = ~PwmRise;
-            Delay50ms();
-        }
     } else {
         PwmNow -= 5;
-        if(PwmNow == 0)   //Change status
-        {
-            PwmRise = ~PwmRise;
-            Delay50ms();
-        }
     }
-    /*
     UartSendStr("PWM: ");
     if (PwmNow / 1000 != 0)
         UartSend(PwmNow / 1000 + '0');
     UartSend(PwmNow % 1000 / 100 + '0');
-    UartSend(PwmNow % 100 / 10 + '0');*/
+    UartSend(PwmNow % 100 / 10 + '0');
     P_SW2 |= 0x80;
     PWMA_CCR1 = PwmNow;
     Delay50ms();
