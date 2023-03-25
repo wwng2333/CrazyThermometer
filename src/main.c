@@ -14,6 +14,7 @@ void main(void)
 
     while (1)                       //主循环
     {
+        PWM_Update();
         if(UartOnMsg)               //串口收到消息
         {
             UartOnMessage();        //处理消息

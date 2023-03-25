@@ -4,5 +4,6 @@
 #include "STC8H.h"
 
 void PWM_Init(void);
+void PWM_Update(void);
 
 #endif
