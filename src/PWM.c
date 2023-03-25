@@ -26,16 +26,16 @@ void PWM_Update(void)
     if(PwmRise) 
     {
         PwmNow += 5;
-        if(PwmNow >= 200) //Change status
+        if(PwmNow == 200) //Change status
         {
-            PwmRise = 0;
+            PwmRise = ~PwmRise;
             Delay50ms();
         }
     } else {
         PwmNow -= 5;
-        if(PwmNow <= 0) //Change status
+        if(PwmNow == 0)   //Change status
         {
-            PwmRise = 1;
+            PwmRise = ~PwmRise;
             Delay50ms();
         }
     }
